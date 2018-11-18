@@ -9,6 +9,12 @@ import * as postActions from './shared/store/reducers/default-sample';
 import * as sagaActions from './shared/sagas/saga';
 import { fetchPostList } from './shared/actions';
 import * as usersAction from './shared/store/reducers/users';
+import { renderRoutes } from 'react-router-config';
+import { Link, Router } from 'react-router-dom';
+import DashboardApp from './modules/apps/dashboard/DashboardApp';
+import HomeApp from './modules/apps/home/HomeApp';
+import { Route } from 'react-router-dom';
+import { withRouter } from 'react-router';
 
 class App extends Component {
 
@@ -30,18 +36,27 @@ class App extends Component {
 
   test = () => {
     const result = this.props.UsersRxjsActions.getUsers();
-    console.log('========================', result);
+    // dispatch 결과는 무엇일까?
+    console.log('>', result);
   };
 
   render() {
-    console.log('%c앱 속성', 'color: yellow;');
+    console.log('%cApp.render() 앱 속성', 'color: yellow;');
     console.log(this.props);
     console.log(this.props.PostsSagaActions.fetchPostList);
 
     return (
       <div className="App">
+        {/*{renderRoutes(this.props.routes)}*/}
         <header>
+          <ul>
+            <li><Link to="/">home</Link></li>
+            <li><Link to="/dashboards">dashboards</Link></li>
+          </ul>
           {/*<img src={logo} className="App-logo" alt="logo" />*/}
+          <Route exact path="/" component={HomeApp} />
+          <Route path="/dashboards" component={DashboardApp} />
+          {/*<Route path="/posts/:id" component={DashboardApp} />*/}
           <div>
             <h4>promise middleware : {this.props.defaults.number}</h4>
             <p>
@@ -174,4 +189,4 @@ const mapDispatchToProps = (dispatch) => ({
   UsersRxjsActions: bindActionCreators(usersAction, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App));
